@@ -1,0 +1,23 @@
+extends layout
+
+
+
+block content
+  h1= title
+
+  script(src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js")
+
+ 
+  
+  p Streaming torrent #{magnet}
+
+  script.
+    var client = new WebTorrent()
+    var torrentId = "#{magnet}"
+    
+    client.add(torrentId, function (torrent) {
+      var file = torrent.files.find(function (file) {
+        return file.name.endsWith('.mp4')
+      })
+      file.appendTo('body')
+    })
