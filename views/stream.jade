@@ -1,23 +1,31 @@
 extends layout
 
-
+block scripts 
+  script(src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.debug.js")
 
 block content
   h1= title
 
-  script(src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js")
 
  
   
-  p Streaming torrent #{magnet}
+  p Streaming torrent !{infohash}
 
   script.
     var client = new WebTorrent()
-    var torrentId = "#{magnet}"
+    var torrentId = "!{infohash}"
     
-    client.add(torrentId, function (torrent) {
+    client.add(torrentId,  {announce: ['wss://tracker.openwebtorrent.com']}, function (torrent) {
+      var started = 0;
+      torrent.on('download', function (bytes) {
+        if (started == 0) {
+          
+        }
+        console.log(torrent.progress)
+      })
+      console.log(torrent.files)
       var file = torrent.files.find(function (file) {
-        return file.name.endsWith('.mp4')
+        return file.name.toLowerCase().endsWith('.mp4')
       })
       file.appendTo('body')
     })
