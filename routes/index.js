@@ -6,8 +6,6 @@ var WebTorrent = require('webtorrent-hybrid')
 
 let client = new WebTorrent()
 
-
-/* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
@@ -19,23 +17,13 @@ router.get('/stream/:infohash', function(req, res, next) {
           return file.name.toLowerCase().endsWith('.mp4')
         })
         
-        console.log ("Streaming " + file.path)
-        
         let range = req.headers.range;
-
-        console.log(range);
         if(range)
         {
-          //let err = new Error("Wrong range");
-          //err.status = 416;
-          //return next(err);
           var positions = range.replace(/bytes=/, "").split("-");
         } else {
           var positions = [0,10];
         }
-
-
-        
         let start = parseInt(positions[0], 10);
         let file_size = file.length;
         let end = positions[1] ? parseInt(positions[1], 10) : file_size - 1;
@@ -71,29 +59,20 @@ router.get('/view/:infohash', function(req, res, next) {
   
 });
 
-
 router.post('/', function (req, res) {
-  //res.send('Got a POST request')
-
-
   var magnetURI = req.body.magnet
-  
   check_torrent = client.get(magnetURI)
 
   if (check_torrent) {
-    //res.render('stream', { title: 'Streaming...', "infohash": check_torrent.infoHash, "magnet" : req.body.magnet  });
     res.redirect("/view/" + check_torrent.infoHash)
   } else {
-
-      client.add(magnetURI , function (torrent) {
-
+    client.add(magnetURI , function (torrent) {
       console.log(torrent.infoHash)
       res.redirect("/view/" + torrent.infoHash)
       torrent.on('done', function () {
         console.log('torrent download finished')
       })
     })
-
   }
 
 })
