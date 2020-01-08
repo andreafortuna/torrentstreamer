@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 let fs = require("fs")
   
-var WebTorrent = require('webtorrent-hybrid')
+var WebTorrent = require('webtorrent')
 
 let client = new WebTorrent()
 
