@@ -71,7 +71,7 @@ router.post('/', function (req, res) {
 ]}  , function (torrent) {
 
     console.log(torrent.infoHash)
-    res.render('seed', { title: 'Streaming...', "infohash": torrent.infoHash, "magnet" : req.body.magnet  });
+    res.render('stream', { title: 'Streaming...', "infohash": torrent.infoHash, "magnet" : req.body.magnet  });
     torrent.on('done', function () {
       console.log('torrent download finished')
     })
