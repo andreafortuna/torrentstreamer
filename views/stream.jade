@@ -1,8 +1,5 @@
 extends layout
 
-block scripts 
-  script(src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.debug.js")
-
 block content
   h1= title
 
@@ -11,21 +8,7 @@ block content
   
   p Streaming torrent !{infohash}
 
-  script.
-    var client = new WebTorrent()
-    var torrentId = "!{infohash}"
-    
-    client.add(torrentId,  {announce: ['wss://tracker.openwebtorrent.com']}, function (torrent) {
-      var started = 0;
-      torrent.on('download', function (bytes) {
-        if (started == 0) {
-          
-        }
-        console.log(torrent.progress)
-      })
-      console.log(torrent.files)
-      var file = torrent.files.find(function (file) {
-        return file.name.toLowerCase().endsWith('.mp4')
-      })
-      file.appendTo('body')
-    })
+  video(width='320', height='240', autoplay='')
+    source(src="/stream/#{infohash}", type='video/mp4')
+
+  
