@@ -7,7 +7,7 @@ var WebTorrent = require('webtorrent-hybrid')
 let client = new WebTorrent()
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Torrent streamer' });
+  res.render('index', { title: 'Torrent Streamer Beta' });
 });
 
 router.get('/stream/:infohash', function(req, res, next) {
