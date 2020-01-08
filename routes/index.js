@@ -66,16 +66,25 @@ router.post('/', function (req, res) {
 
 
   var magnetURI = req.body.magnet
+  
+  check_torrent = client.get(magnetURI)
 
-  client.add(magnetURI, { announce: ['wss://tracker.openwebtorrent.com'
-]}  , function (torrent) {
+  if (check_torrent) {
+    res.render('stream', { title: 'Streaming...', "infohash": check_torrent.infoHash, "magnet" : req.body.magnet  });
+  } else {
 
-    console.log(torrent.infoHash)
-    res.render('stream', { title: 'Streaming...', "infohash": torrent.infoHash, "magnet" : req.body.magnet  });
-    torrent.on('done', function () {
-      console.log('torrent download finished')
+      client.add(magnetURI, { announce: ['wss://tracker.openwebtorrent.com'
+  ]}  , function (torrent) {
+
+      console.log(torrent.infoHash)
+      res.render('stream', { title: 'Streaming...', "infohash": torrent.infoHash, "magnet" : req.body.magnet  });
+      torrent.on('done', function () {
+        console.log('torrent download finished')
+      })
     })
-  })
+
+  }
+
 })
 
 module.exports = router;
