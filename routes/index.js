@@ -7,7 +7,7 @@ var WebTorrent = require('webtorrent-hybrid')
 let client = new WebTorrent()
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Torrent streamer' });
 });
 
 router.get('/stream/:infohash', function(req, res, next) {
@@ -54,7 +54,7 @@ router.get('/view/:infohash', function(req, res, next) {
     console.log("unsupported file type")
     res.render('torrent_error', { message: 'Unsupported file type!'});
   } else {
-    res.render('stream', { title: 'Express', "infohash": req.params.infohash });
+    res.render('stream', { title: file.name, "infohash": req.params.infohash });
   }
   
 });
