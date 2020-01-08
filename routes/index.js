@@ -70,14 +70,14 @@ router.post('/', function (req, res) {
   check_torrent = client.get(magnetURI)
 
   if (check_torrent) {
-    res.render('stream', { title: 'Streaming...', "infohash": check_torrent.infoHash, "magnet" : req.body.magnet  });
+    //res.render('stream', { title: 'Streaming...', "infohash": check_torrent.infoHash, "magnet" : req.body.magnet  });
+    res.redirect("/view/" + check_torrent.infoHash)
   } else {
 
-      client.add(magnetURI, { announce: ['wss://tracker.openwebtorrent.com'
-  ]}  , function (torrent) {
+      client.add(magnetURI , function (torrent) {
 
       console.log(torrent.infoHash)
-      res.render('stream', { title: 'Streaming...', "infohash": torrent.infoHash, "magnet" : req.body.magnet  });
+      res.redirect("/view/" + torrent.infoHash)
       torrent.on('done', function () {
         console.log('torrent download finished')
       })
