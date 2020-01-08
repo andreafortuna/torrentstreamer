@@ -12,4 +12,4 @@ block content
     h3 Active torrents
     each el in torrentlist
         li
-            a(href="view/#{el.hash}")= el.name
+            a(href="view/#{el.hash}", target="_blank")= el.name
