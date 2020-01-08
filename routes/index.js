@@ -68,17 +68,15 @@ router.get('/view/:infohash', function(req, res, next) {
 
 router.post('/', function (req, res) {
   var magnetURI = req.body.magnet
-  check_torrent = client.get(magnetURI)
-
+  var check_torrent = client.get(magnetURI)
+  console.log(check_torrent)
   if (!check_torrent) {
     //res.redirect("/view/" + check_torrent.infoHash)
     client.add(magnetURI , function (torrent) {
-      res.redirect("/")
-      torrent.on('done', function () {
-        console.log('torrent download finished')
-      })
+
     })
   }
+  res.redirect("/")
 })
 
 module.exports = router;
