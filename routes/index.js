@@ -69,11 +69,8 @@ router.get('/view/:infohash', function(req, res, next) {
 router.post('/', function (req, res) {
   var magnetURI = req.body.magnet
   var check_torrent = client.get(magnetURI)
-  console.log(check_torrent)
   if (!check_torrent) {
-    //res.redirect("/view/" + check_torrent.infoHash)
     client.add(magnetURI , function (torrent) {
-
     })
   }
   res.redirect("/")
