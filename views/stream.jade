@@ -2,6 +2,6 @@ extends layout
 
 block content
   h1= title  
-  video(autoplay='', controls='')
+  video(autoplay='', controls='', style="max-width:90%")
     source(src="/stream/#{infohash}", type='video/mp4')
 
