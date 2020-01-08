@@ -7,7 +7,15 @@ var WebTorrent = require('webtorrent-hybrid')
 let client = new WebTorrent()
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Torrent Streamer Beta' });
+  //Torrentlist
+  let torrents = client.torrents.reduce(function(array, data) {
+		array.push({
+      hash: data.infoHash,
+      name: data.name
+		});
+		return array;
+	}, []);
+  res.render('index', { title: 'Torrent Streamer Beta', torrentlist: torrents});
 });
 
 router.get('/stream/:infohash', function(req, res, next) {
@@ -62,11 +70,10 @@ router.post('/', function (req, res) {
   var magnetURI = req.body.magnet
   check_torrent = client.get(magnetURI)
 
-  if (check_torrent) {
-    res.redirect("/view/" + check_torrent.infoHash)
-  } else {
+  if (!check_torrent) {
+    //res.redirect("/view/" + check_torrent.infoHash)
     client.add(magnetURI , function (torrent) {
-      res.redirect("/view/" + torrent.infoHash)
+      res.redirect("/")
       torrent.on('done', function () {
         console.log('torrent download finished')
       })
