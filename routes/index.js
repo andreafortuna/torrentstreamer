@@ -17,7 +17,8 @@ router.get('/stream/:infohash', function(req, res, next) {
   
         var file = torrent.files.find(function (file) {
           return file.name.toLowerCase().endsWith('.mp4')
-        })       
+        })
+        
         console.log ("Streaming " + file.path)
         
         let range = req.headers.range;
@@ -57,7 +58,17 @@ router.get('/stream/:infohash', function(req, res, next) {
 });
 
 router.get('/view/:infohash', function(req, res, next) {
-  res.render('stream', { title: 'Express', "infohash": req.params.infohash });
+  var torrent = client.get(req.params.infohash);
+  var file = torrent.files.find(function (file) {
+    return file.name.toLowerCase().endsWith('.mp4')
+  })
+  if (!file) {
+    console.log("unsupported file type")
+    res.render('torrent_error', { message: 'Unsupported file type!'});
+  } else {
+    res.render('stream', { title: 'Express', "infohash": req.params.infohash });
+  }
+  
 });
 
 
