@@ -36,7 +36,6 @@ router.get('/stream/:infohash', function(req, res, next) {
           "Content-Type": "video/mp4"
         }
         res.writeHead(206, head);
-        
         let stream_position = {
           start: start,
           end: end
@@ -67,14 +66,12 @@ router.post('/', function (req, res) {
     res.redirect("/view/" + check_torrent.infoHash)
   } else {
     client.add(magnetURI , function (torrent) {
-      console.log(torrent.infoHash)
       res.redirect("/view/" + torrent.infoHash)
       torrent.on('done', function () {
         console.log('torrent download finished')
       })
     })
   }
-
 })
 
 module.exports = router;

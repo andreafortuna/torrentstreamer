@@ -6,3 +6,11 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+#ribbon {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  border: 0px;
+}
