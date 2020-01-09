@@ -12,6 +12,10 @@ var pool = new Pool({
   ssl: false
 });
 
+let ts = Date.now();
+let date_ob = new Date(ts);
+let restartdate = date_ob.getDate();
+
 
 var restore = async () => {
   // DB persistance support
