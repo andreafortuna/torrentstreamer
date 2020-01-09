@@ -1,17 +1,18 @@
 var express = require('express');
 var router = express.Router();
-let fs = require("fs")
-  
-var WebTorrent = require('webtorrent')
 
-let client = new WebTorrent()
+let fs = require("fs");
+var WebTorrent = require('webtorrent');
+let client = new WebTorrent();
 
 router.get('/', function(req, res, next) {
   //Torrentlist
   let torrents = client.torrents.reduce(function(array, data) {
+    //console.log(data)
 		array.push({
       hash: data.infoHash,
-      name: data.name
+      name: data.name,
+      progress: Math.round(data.progress * 100)
 		});
 		return array;
 	}, []);
@@ -20,11 +21,9 @@ router.get('/', function(req, res, next) {
 
 router.get('/stream/:infohash', function(req, res, next) {
         var torrent = client.get(req.params.infohash);
-  
         var file = torrent.files.find(function (file) {
           return file.name.toLowerCase().endsWith('.mp4')
         })
-        
         let range = req.headers.range;
         if(range)
         {
@@ -54,12 +53,21 @@ router.get('/stream/:infohash', function(req, res, next) {
 
 router.get('/view/:infohash', function(req, res, next) {
   var torrent = client.get(req.params.infohash);
+  var filelist
   var file = torrent.files.find(function (file) {
+    filelist.push(file.name)
     return file.name.toLowerCase().endsWith('.mp4')
   })
+  console.log(filelist)
   if (!file) {
-    console.log("unsupported file type")
-    res.render('torrent_error', { message: 'Unsupported file type!'});
+    if (filelist.length == 0) {
+      console.log("no file available")
+      res.render('torrent_error', { message: 'No files available!'});
+    } else {
+      console.log("unsupported file type")
+      res.render('torrent_error', { message: 'Unsupported file type!'});
+    }
+    
   } else {
     res.render('stream', { title: file.name, "infohash": req.params.infohash });
   }

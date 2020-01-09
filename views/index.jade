@@ -12,4 +12,7 @@ block content
     h3 Active torrents
     each el in torrentlist
         li
-            a(href="view/#{el.hash}", target="_blank")= el.name
+            if el.progress > 0
+                a(href="view/#{el.hash}", target="_blank")= el.name+" ("+el.progress+" %)"
+            else
+                a()= el.name+" ("+el.progress+" %)"
