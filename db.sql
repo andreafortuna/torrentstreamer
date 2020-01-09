@@ -1,1 +1,1 @@
-create table torrents (url text);
+create table torrents (url text, url hash);
