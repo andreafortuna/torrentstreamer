@@ -13,8 +13,7 @@ block content
         a(href="/")="Refresh"
     h3 Active torrents
     each el in torrentlist
-        li
+        li= el.name+" ("+el.progress+" %) "
             if el.progress > 0
-                a(href="view/#{el.hash}", target="_blank")= el.name+" ("+el.progress+" %)"
-            else
-                a()= el.name+" ("+el.progress+" %)"
+                a(href="view/#{el.hash}", target="_blank")= "View"
+            a(href="delete/#{el.hash}", style="margin-left:10px;")= "Delete"

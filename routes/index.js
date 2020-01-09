@@ -97,13 +97,38 @@ router.get('/view/:infohash', function(req, res, next) {
   
 });
 
+router.get('/delete/:infohash', function(req, res, next) {
+  client.remove(req.params.infohash , function (err) {
+    try {
+      pool.query("delete from torrents where url=('" + req.params.infohash + "')");
+    } catch (err) {
+      console.error(err);
+    }
+  })
+  res.redirect("/");
+});
+
+router.get('/deleteall', function(req, res, next) {
+  client.torrents.forEach((torrent) => {
+    client.remove(torrent.infoHash , function (err) {
+  })
+  });
+  try {
+    pool.query("truncate table torrents");
+  } catch (err) {
+    console.error(err);
+  }
+  res.redirect("/");
+});
+
+
 router.post('/', function (req, res) {
   var magnetURI = req.body.magnet
   var check_torrent = client.get(magnetURI)
   if (!check_torrent) {
     client.add(magnetURI , function (torrent) {
         try {
-          pool.query("insert into torrents values ('" + magnetURI + "')");
+          pool.query("insert into torrents values ('" + torrent.infoHash + "')");
         } catch (err) {
           console.error(err);
         }
