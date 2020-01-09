@@ -1,0 +1,1 @@
+create table torrents (url text);
