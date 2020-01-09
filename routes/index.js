@@ -8,7 +8,6 @@ let client = new WebTorrent();
 router.get('/', function(req, res, next) {
   //Torrentlist
   let torrents = client.torrents.reduce(function(array, data) {
-    //console.log(data)
 		array.push({
       hash: data.infoHash,
       name: data.name,
@@ -53,21 +52,11 @@ router.get('/stream/:infohash', function(req, res, next) {
 
 router.get('/view/:infohash', function(req, res, next) {
   var torrent = client.get(req.params.infohash);
-  var filelist
   var file = torrent.files.find(function (file) {
-    filelist.push(file.name)
     return file.name.toLowerCase().endsWith('.mp4')
   })
-  console.log(filelist)
   if (!file) {
-    if (filelist.length == 0) {
-      console.log("no file available")
-      res.render('torrent_error', { message: 'No files available!'});
-    } else {
-      console.log("unsupported file type")
-      res.render('torrent_error', { message: 'Unsupported file type!'});
-    }
-    
+    res.render('torrent_error', { message: 'Unsupported file type!'});
   } else {
     res.render('stream', { title: file.name, "infohash": req.params.infohash });
   }
