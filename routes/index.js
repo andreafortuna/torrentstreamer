@@ -98,7 +98,7 @@ router.get('/view/:infohash', function(req, res, next) {
 router.get('/delete/:infohash', function(req, res, next) {
   client.remove(req.params.infohash , function (err) {
     try {
-      pool.query("delete from torrents where url=('" + req.params.infohash + "')");
+      pool.query("delete from torrents where hash=('" + req.params.infohash + "')");
     } catch (err) {
       console.error(err);
     }
