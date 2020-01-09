@@ -2,8 +2,38 @@ var express = require('express');
 var router = express.Router();
 
 let fs = require("fs");
+
 var WebTorrent = require('webtorrent');
-let client = new WebTorrent();
+var client = new WebTorrent();
+
+var { Pool } = require('pg');
+var pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: false
+});
+
+
+var restore = async () => {
+  // DB persistance support
+    try {
+      var sqlclient = await pool.connect()
+      const result =  await sqlclient.query('SELECT * FROM torrents');
+      result.rows.forEach((row) => {
+        var magnetURI = row.url
+        var check_torrent = client.get(magnetURI)
+        if (!check_torrent) {
+          client.add(magnetURI , function (torrent) {
+          })
+        }
+      });
+      sqlclient.release();
+
+    } catch (err) {
+      console.error(err);
+    }
+}
+
+restore();
 
 router.get('/', function(req, res, next) {
   //Torrentlist
@@ -68,6 +98,11 @@ router.post('/', function (req, res) {
   var check_torrent = client.get(magnetURI)
   if (!check_torrent) {
     client.add(magnetURI , function (torrent) {
+        try {
+          pool.query("insert into torrents values ('" + magnetURI + "')");
+        } catch (err) {
+          console.error(err);
+        }
     })
   }
   res.redirect("/")
